@@ -20,32 +20,23 @@ describe('ThreadRepositoryPostgres', () => {
   describe('Available thread function', () => {
     it('should get thread', async () => {
       // Arrange
-      const registerUser = new RegisterUser({
-        username: 'dicoding',
-        password: '12345',
-        fullname: 'Dicoding Indonesia',
+      await UsersTableTestHelper.addUser({
+        id: 'user-123',
       });
 
       const addThread = new AddThread({
         title: 'title',
         body: 'content',
-        owner: 'user-0123',
+        owner: 'user-123',
       });
 
       const fakeIdGeneratorThread = () => '123'; // stub!
-      const fakeIdGeneratorUser = () => '0123'; // stub!
-
       const threadRepositoryPostgres = new ThreadRepositoryPostgres(
         pool,
         fakeIdGeneratorThread
       );
-      const userRepositoryPostgres = new UserRepositoryPostgres(
-        pool,
-        fakeIdGeneratorUser
-      );
 
       // Action
-      await userRepositoryPostgres.addUser(registerUser);
       await threadRepositoryPostgres.addThread(addThread);
       const { date } = await threadRepositoryPostgres.getDetailThread({
         threadId: 'thread-123',
